@@ -1,0 +1,54 @@
+version: "3"
+
+services: 
+  angular-app:
+    restart: always
+    build:
+      context: ./angular-docker
+      dockerfile: Dockerfile.dev
+    # command: npm run ng serve
+    volumes:
+      - ./angular-docker:/usr/src/app/angular-docker
+      - /usr/src/app/angular-docker/node_modules
+    # env_file:
+    #   - .env
+    ports: 
+      - 4200:4200
+    links:
+      - java-spring
+    # links:
+    #   - db
+      # - redis
+  java-spring:
+    restart: always
+    build: 
+      context: ./javaspring/department
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./javaspring/department:/usr/src/app/javaspring/department
+    ports: 
+      - 9001:9001
+
+#   db:
+#     image: postgres:12
+#     restart: always
+#     environment:
+#       POSTGRES_DB: mytest
+#       POSTGRES_USER: mytest
+#       POSTGRES_PASSWORD: password
+#     # ports:
+#     #   - 5432:5432
+#     volumes:
+#       - "db-data:/var/lib/postgresql/data"
+#   # redis:
+#   #   image: redis:alpine
+#   #   restart: always
+#     # ports:
+#     #   - 6379:6379
+#   adminer:
+#     image: adminer
+#     restart: always
+#     ports:
+#       - 8081:8080   
+# volumes:
+#   db-data:
